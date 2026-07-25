@@ -27,7 +27,7 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-LOC-001 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-LOC-002 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-LOC-003 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-LOC-004 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-LOC-004 | LOC | calendar_display_rules | EthiopianCalendarAdapter | (presentation) | n/a | tests/Unit/LOC/EthiopianCalendarTest | Tested |
 | FR-LOC-005 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-LOC-006 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-LOC-007 | LOC | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -50,7 +50,7 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-PRD-006 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRD-007 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRD-008 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-PRD-009 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-PRD-009 | PRD | products, product_change_events | TransitionProductStatusAction | admin | products.publish | tests/Feature/PRD/ProductPublicationTest | Tested |
 | FR-PRD-010 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRD-011 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRD-012 | PRD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -70,9 +70,9 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-PRI-002 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRI-003 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRI-004 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-PRI-005 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-PRI-005 | PRI | coupons, coupon_reservations, coupon_usages | CouponRedemptionService (atomic) | checkout | n/a | tests/Feature/PRI/CouponConcurrencyTest | Tested |
 | FR-PRI-006 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-PRI-007 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-PRI-007 | PRI | (calculation) | PricingEngine | (internal) | n/a | tests/Unit/PRI/PricingEngineTest | Tested |
 | FR-PRI-008 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRI-009 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PRI-010 | PRI | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -95,7 +95,7 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-CHK-005 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CHK-006 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CHK-007 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-CHK-008 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-CHK-008 | CHK | orders, order_items, checkout_idempotency_records, stock_reservations | PlaceOrderAction | POST /checkout/place | (guest/owner; idempotency) | tests/Feature/CHK/PlaceOrderTest | Tested |
 | FR-CHK-009 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CHK-010 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CHK-011 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -103,7 +103,7 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-CHK-013 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CHK-014 | CHK | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-ORD-001 | ORD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-ORD-002 | ORD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-ORD-002 | ORD | orders, order_status_events | TransitionOrderStatusAction | (internal) | n/a | tests/Feature/PAY/PaymentWebhookTest (confirm) | Tested |
 | FR-ORD-003 | ORD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-ORD-004 | ORD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-ORD-005 | ORD | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -120,9 +120,9 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-PAY-002 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PAY-003 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PAY-004 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-PAY-005 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-PAY-005 | PAY | payment_events, payments | ProcessPaymentWebhookAction | POST /webhooks/payment | signature verified | tests/Feature/PAY/PaymentWebhookTest | Tested |
 | FR-PAY-006 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-PAY-007 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-PAY-007 | PAY | payments, payment_events, financial_ledger_entries | ProcessPaymentWebhookAction (inbox dedup) | POST /webhooks/payment | signature+replay | tests/Feature/PAY/PaymentWebhookTest | Tested |
 | FR-PAY-008 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PAY-009 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-PAY-010 | PAY | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
@@ -138,7 +138,7 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR-INV-004 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-INV-005 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-INV-006 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-INV-007 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-INV-007 | INV | inventory_items, stock_reservations, stock_movements | InventoryReservationService (atomic conditional update) | (internal) | n/a | tests/Feature/CHK/PlaceOrderTest (no oversell) | Tested |
 | FR-INV-008 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-INV-009 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-INV-010 | INV | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
