@@ -50,6 +50,11 @@ Status legend: **Applied** (decided and implemented) / **Assumption** (safe defa
 ## D-010 — UUIDv7 + human-readable references (Applied)
 **Context:** LLD §3.5, SDD ADR-009. Public IDs are UUIDv7 `CHAR(36)`; display references (order/shipment/return/case/payout/batch numbers) are governed separately and are never an authorization boundary. Route-model binding resolves on `public_id`, never internal `id`.
 
+## D-014 — Portable SQL for cross-driver tests (Applied)
+**Context:** MySQL-only functions (`GREATEST`) and DECIMAL string formatting differ on the SQLite test connection (D-002). SQLite returns a DECIMAL column as a numeric `40`, MySQL returns the string `'40.0000'`.
+**Decision:** Use portable SQL expressions in atomic updates (`CASE WHEN x>0 THEN x-1 ELSE 0 END` instead of `GREATEST`). In tests, compare money columns numerically (`(float) $x`) rather than by exact string, since the authoritative representation is the DECIMAL value, not its textual formatting. Production MySQL still stores/returns DECIMAL(20,4). The `Money` value object remains the in-app source of truth (no float arithmetic in logic — only in test comparison of already-computed persisted values).
+**Consequence:** The same test suite runs on SQLite (agent/CI) and MySQL (integration) without weakening any invariant.
+
 ## D-013 — LLD `sessions` table renamed `user_sessions` (Applied)
 **Context:** LLD §5.1 defines an IAM `sessions` table for active-session management + revocation (FR-IAM-008). Laravel's `database` session driver also uses a table named `sessions` with an incompatible schema.
 **Decision:** Name the IAM domain table `user_sessions` (active-session registry) and keep the framework `sessions` table for the session store. Both are created in the IAM migration. Ownership and the FR-IAM-008 behavior are unchanged; only the physical name differs to avoid a collision.
