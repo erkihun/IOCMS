@@ -4,10 +4,10 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 
 | FR | LLD module | Table(s) | Action/Service | Route/Interface | Policy/Authz | Test | Status |
 |----|-----------|----------|----------------|-----------------|--------------|------|--------|
-| FR-IAM-001 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-IAM-001 | IAM | users, user_identifiers, password_histories | RegisterCustomerAction | POST /register | (guest; DB unique) | tests/Feature/IAM/RegisterCustomerTest | Tested |
 | FR-IAM-002 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-IAM-003 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-004 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-IAM-004 | IAM | password_histories | PasswordPolicyService (via RegisterCustomerAction) | POST /register | n/a | tests/Feature/IAM/RegisterCustomerTest | Tested |
 | FR-IAM-005 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-IAM-006 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-IAM-007 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |

@@ -50,6 +50,11 @@ Status legend: **Applied** (decided and implemented) / **Assumption** (safe defa
 ## D-010 — UUIDv7 + human-readable references (Applied)
 **Context:** LLD §3.5, SDD ADR-009. Public IDs are UUIDv7 `CHAR(36)`; display references (order/shipment/return/case/payout/batch numbers) are governed separately and are never an authorization boundary. Route-model binding resolves on `public_id`, never internal `id`.
 
+## D-013 — LLD `sessions` table renamed `user_sessions` (Applied)
+**Context:** LLD §5.1 defines an IAM `sessions` table for active-session management + revocation (FR-IAM-008). Laravel's `database` session driver also uses a table named `sessions` with an incompatible schema.
+**Decision:** Name the IAM domain table `user_sessions` (active-session registry) and keep the framework `sessions` table for the session store. Both are created in the IAM migration. Ownership and the FR-IAM-008 behavior are unchanged; only the physical name differs to avoid a collision.
+**Authority:** LLD implementation detail; no requirement weakened.
+
 ## D-012 — Horizon `ext-pcntl`/`ext-posix` platform override (Applied)
 **Context:** Laravel Horizon (baseline-required, SRS/SDD/LLD) needs `ext-pcntl` + `ext-posix`, which are POSIX-only and unavailable on the Windows dev host, but are present on the Linux production/CI target where Horizon actually runs its worker supervisor.
 **Decision:** Add `config.platform.ext-pcntl` / `ext-posix` to `composer.json` so the package resolves and installs on Windows for development and static analysis. Horizon's supervisor commands (`horizon`, `horizon:*`) are only invoked on Linux; on Windows dev, queues run via `queue:work`/`queue:listen`.

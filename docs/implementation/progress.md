@@ -34,7 +34,17 @@ _Updated after each meaningful implementation group. A requirement/module is **V
 ## Waves
 | Wave | Modules | Status |
 |------|---------|--------|
-| 1 Foundation | IAM, ADM, AUD, LOC, OPS, INT | Not started |
+| 1 Foundation | IAM, ADM, AUD, LOC, OPS, INT | In progress |
+
+### Wave 1 detail
+| Module | What exists | Status |
+|--------|-------------|--------|
+| IAM | 12-table migration; User aggregate + 6 models; 7 enums; IdentifierNormalizer, PasswordPolicyService, AuthorizationScopeResolver; RegisterCustomerAction (txn + uniqueness + audit + outbox); RegisterCustomerRequest; RegisterController; /register route + Register.tsx; **5 tests pass (FR-IAM-001/004)** | In progress (registration Tested; auth/MFA/sessions/roles pending) |
+| AUD | 11-table migration; AuditEvent (append-only, hash-chained); AuditRecorder (redaction + chain) | In progress (audit recording Implemented; approvals/privacy/incidents pending) |
+| ADM | 8-table migration; FeatureFlag model + FeatureFlagEvaluator (marketplace gate OFF) | In progress (feature flags Implemented; settings/versioning/templates/numbering pending) |
+| INT | outbox/inbox migration + models; OutboxRecorder; PublishOutboxEventJob | In progress (outbox/inbox Implemented; clients/webhooks/adapters pending) |
+| LOC | config-level locale/currency/calendar defaults; SetLocale middleware | In progress (locale resolution Implemented; translation bundles/calendar adapter pending) |
+| OPS | health endpoint `/up`; config | In progress (health Implemented; backup/restore/alerts pending) |
 | 2 Catalog | CAT, PRD, SRC, PRI | Not started |
 | 3 Commerce | CUS, CRT, CHK, ORD, PAY | Not started |
 | 4 Fulfillment | INV, WHM, SHP, RET | Not started |
