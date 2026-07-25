@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../js/**/*.{ts,tsx}';
+
+/*
+ * IOCMS storefront + portal base styles.
+ * Amharic-compatible typography (FR-LOC-001, NFR-IC accessibility): a font stack
+ * that includes an Ethiopic-capable family with accessible spacing.
+ */
+@theme {
+    --font-sans:
+        'Instrument Sans', 'Noto Sans Ethiopic', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    color-scheme: light dark;
+}
+
+/* Respect reduced-motion preference (WCAG 2.2 — NFR-IC). */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Visible keyboard focus (WCAG 2.4.7 — NFR-IC). */
+:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
