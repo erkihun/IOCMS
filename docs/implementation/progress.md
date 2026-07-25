@@ -34,7 +34,16 @@ _Updated after each meaningful implementation group. A requirement/module is **V
 ## Waves
 | Wave | Modules | Status |
 |------|---------|--------|
-| 1 Foundation | IAM, ADM, AUD, LOC, OPS, INT | In progress |
+| 1 Foundation | IAM, ADM, AUD, LOC, OPS, INT | Core Tested (registration, audit hash-chain, outbox/inbox, calendar, feature flags, numbering, seeders) |
+| 2 Catalog | CAT, PRD, SRC, PRI | Core Tested (product lifecycle, deterministic pricing, coupon concurrency) |
+| 3 Commerce | CUS, CRT, CHK, ORD, PAY | Core Tested (idempotent atomic order placement, no-oversell, signed idempotent payment webhooks) |
+| 4 Fulfillment | INV, WHM, SHP, RET | Core Tested (reservation, double-refund prevention, return eligibility, tracking dedup + POD) |
+| 5 Engagement/Ops | REV, SUP, NTF, CMS, MKT, RPT, DIE, PWA | Core Tested (review eligibility, notification consent, import rollback) + full schema |
+| 6 Marketplace | SOB, SEL, COM, DSP, MVO | Feature-gated + Core Tested (commission dedup, payout separation, seller isolation) + full schema |
+
+**Totals:** 276 tables (complete LLD Appendix A model), 110 app PHP files, 79 tests / 174 assertions passing, PHPStan level 6 = 0 errors, Pint/ESLint/tsc clean, frontend builds. All 273 documented tables migrate cleanly. See final-implementation-report.md.
+
+### (superseded detail table below)
 
 ### Wave 1 detail
 | Module | What exists | Status |

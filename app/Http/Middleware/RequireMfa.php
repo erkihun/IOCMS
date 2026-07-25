@@ -18,7 +18,8 @@ final class RequireMfa
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if ($user && method_exists($user, 'mfaSatisfied') && ! $user->mfaSatisfied($request)) {
+        $confirmed = (bool) $request->session()->get('auth.mfa_confirmed', false);
+        if ($user && method_exists($user, 'mfaSatisfied') && ! $user->mfaSatisfied($confirmed)) {
             throw new DomainException('identity.mfa_required', 'Multi-factor authentication is required.', 403);
         }
 

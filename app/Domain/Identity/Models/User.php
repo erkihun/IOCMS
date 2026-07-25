@@ -12,7 +12,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -122,13 +121,14 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->email_verified_at !== null || $this->phone_verified_at !== null;
     }
 
-    public function mfaSatisfied(Request $request): bool
+    /**
+     * Whether the user's MFA requirement is satisfied. The session-confirmed
+     * flag is passed in from the middleware layer so the domain model stays free
+     * of HTTP dependencies (boundary rule, SDD §15.3).
+     */
+    public function mfaSatisfied(bool $sessionConfirmed): bool
     {
-        if (! $this->mfa_enrolled) {
-            return true;
-        }
-
-        return (bool) $request->session()->get('auth.mfa_confirmed', false);
+        return ! $this->mfa_enrolled || $sessionConfirmed;
     }
 
     public function isActive(): bool
