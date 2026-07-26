@@ -8,6 +8,7 @@ use App\Domain\Identity\Enums\UserStatus;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Services\AuthorizationScopeResolver;
 use App\Support\Uuid\HasPublicId;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,10 +23,14 @@ use Illuminate\Notifications\Notifiable;
  *
  * @property int $id
  * @property string $public_id
- * @property string $type
- * @property string $status
+ * @property UserType $type
+ * @property UserStatus $status
  * @property bool $mfa_enrolled
  * @property string|null $display_name
+ * @property string|null $password_hash
+ * @property int $lock_version
+ * @property CarbonImmutable|null $email_verified_at
+ * @property CarbonImmutable|null $phone_verified_at
  */
 final class User extends Authenticatable implements MustVerifyEmail
 {

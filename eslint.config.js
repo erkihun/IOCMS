@@ -22,6 +22,8 @@ export default [
                 route: 'readonly',
                 console: 'readonly',
                 process: 'readonly',
+                confirm: 'readonly',
+                alert: 'readonly',
             },
         },
         plugins: {

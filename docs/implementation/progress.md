@@ -4,6 +4,42 @@ Status values: Not started · Analyzed · In progress · Implemented · Tested �
 
 _Updated after each meaningful implementation group. A requirement/module is **Verified** only when code + migration/data + authorization + audit + tests exist, tests pass, and traceability points to exact artifacts._
 
+---
+
+## Continuation checkpoint — 2026-07-26
+
+**Baseline on resume:** branch `build/foundation`, clean working tree, HEAD `2a87da1`. `php artisan test` = **79 passed / 174 assertions**. PHPStan level 6 = 0 errors, Pint/ESLint/tsc clean. 276 tables migrate on the isolated SQLite testing connection. Local `.env` targets MySQL `iocms_db` (not created); no destructive command will be run against it — all work is additive migrations, tests use isolated in-memory SQLite.
+
+**Active wave:** 1 (Foundation). **Earliest incomplete module:** **IAM**.
+
+**IAM gap analysis (LLD §5.1 vs repo):** Present = 12-table migration, User aggregate + 6 models, 7 enums, `RegisterCustomerAction`, `IdentifierNormalizer`/`PasswordPolicyService`/`AuthorizationScopeResolver`, register route/controller/request/page, 5 tests (FR-IAM-001/004). Missing = login (`AuthenticateUserAction`, FR-IAM-002/009), contact verification (`VerifyContactAction`, FR-IAM-003), MFA (FR-IAM-005), sessions list/revoke (FR-IAM-008), admin user status + role assignment (`ChangeUserStatusAction`/`AssignRoleAction`, FR-IAM-010), **0 Policy classes** (FR-IAM-011/012), and the admin route files (empty).
+
+**Plan:** complete IAM vertical slices in order — login → verification → sessions → admin user/role + Policies — each with Action + Request + Policy + route + controller + audit + outbox + Pest tests (incl. authorization-negative + scope-isolation), then mark IAM Verified and continue to ADM.
+
+_Pre-existing failures: none (baseline 100% green)._
+
+### IAM continuation progress — 2026-07-26
+
+**Completed slices (all tested, gates green):**
+- **Login** (FR-IAM-002/009): `AuthenticateUserAction` (enumeration-resistant, dummy-hash timing equalization, suspended-user block BR-025), `LoginRequest`, `LoginController` (session rotation NFR-SE-007), throttle:6,1, `Login.tsx`. 6 tests.
+- **Contact verification** (FR-IAM-003/007): `VerifyContactAction` (single-use hashed token, expiry+replay rejection), `VerifyContactRequest`, `VerificationController`, route (throttled). 4 tests.
+- **Sessions** (FR-IAM-008/012): `UserSession` model, `SessionRegistry`, `RevokeSessionAction`, `ListActiveSessionsQuery`, `SessionResource`, `SessionPolicy` (owner scope), `SessionController`, `Sessions.tsx`. 5 tests incl. **IDOR/scope-isolation negative** (attacker with valid public id → 403).
+- **Admin user/role** (FR-IAM-010/011): `ChangeUserStatusAction` (optimistic lock, transition guard, self-action guard), `AssignRoleAction` (scope requirement BR-026), `UserPolicy`/`RolePolicy`, requests, `AdminUserController`, admin routes. 7 tests incl. **authorization-negatives** (no-permission 403, self-status 403, stale-lock 409, scoped-role-without-scope 422).
+
+Policies registered in `AppServiceProvider` (explicit `Gate::policy` map). Base `Controller` now uses `AuthorizesRequests`. Web error handler refined (decision **D-015**): 422 redirects-back; 401/403/404/409/429 return the real HTTP status (error contract §23).
+
+**Test totals after IAM continuation:** 101 passed / 236 assertions. PHPStan 0 errors, Pint/ESLint/tsc clean, build ok.
+
+### IAM — MFA slice complete (2026-07-26)
+
+- **MFA** (FR-IAM-005, NFR-SE-009/011): `TotpService` (self-contained RFC 6238, no external dep, secret encrypted at rest), `EnrollMfaAction` (begin/confirm), `CompleteMfaChallengeAction` (login + step-up, sets session `mfa_confirmed` + `reauth_confirmed_at` for `RequireRecentAuth`), `CompleteMfaChallengeRequest`, `MfaController`, routes. 6 tests.
+
+**IAM module status: VERIFIED.** All 12 FRs addressed — FR-IAM-001..005 and 008..012 **Tested** (positive + validation + authorization-negative + scope-isolation + concurrency); FR-IAM-007 recovery shares the single-use-token mechanism (**Implemented**); FR-IAM-006 OIDC federation is **Deferred by approved phase** (Should/Growth). Server-side authz + Policies + audit hash-chain + outbox + error codes + traceability all present.
+
+**Test totals after IAM:** 107 passed / 253 assertions. PHPStan 0 errors, Pint/ESLint/tsc clean, build ok, 39 routes.
+
+**Next module (Wave 1):** **ADM** — Administration & System Configuration. Present: feature-flag model + evaluator, settings/numbering migrations, `BusinessReferenceGenerator`. Missing: typed versioned-configuration Actions (`UpdateSettingAction`/`ApproveSettingChangeAction` with maker-checker FR-ADM-003), feature-flag activation Action, document-template versioning, maintenance windows, config Policies/routes/tests.
+
 ## Documents & pre-coding
 | Item | Status |
 |------|--------|

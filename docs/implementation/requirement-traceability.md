@@ -5,17 +5,17 @@ Maps each SRS functional requirement through the full chain: SRS → SDD design 
 | FR | LLD module | Table(s) | Action/Service | Route/Interface | Policy/Authz | Test | Status |
 |----|-----------|----------|----------------|-----------------|--------------|------|--------|
 | FR-IAM-001 | IAM | users, user_identifiers, password_histories | RegisterCustomerAction | POST /register | (guest; DB unique) | tests/Feature/IAM/RegisterCustomerTest | Tested |
-| FR-IAM-002 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-003 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-IAM-002 | IAM | users, user_identifiers, login_attempts | AuthenticateUserAction (enumeration-resistant) | POST /login | guest+throttle | tests/Feature/IAM/AuthenticationTest | Tested |
+| FR-IAM-003 | IAM | contact_verifications | VerifyContactAction (single-use token) | POST /verification/confirm | signed/throttled | tests/Feature/IAM/ContactVerificationTest | Tested |
 | FR-IAM-004 | IAM | password_histories | PasswordPolicyService (via RegisterCustomerAction) | POST /register | n/a | tests/Feature/IAM/RegisterCustomerTest | Tested |
-| FR-IAM-005 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-006 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-007 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-008 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-009 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-010 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-011 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
-| FR-IAM-012 | IAM | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
+| FR-IAM-005 | IAM | authenticators | EnrollMfaAction + CompleteMfaChallengeAction (TotpService RFC 6238) | POST /mfa/enroll,/mfa/challenge | authenticated + throttle | tests/Feature/IAM/MfaTest | Tested |
+| FR-IAM-006 | IAM | (OIDC port) | OidcFederationService (port) | — | — | contract test (deferred) | Deferred by approved phase (Growth) |
+| FR-IAM-007 | IAM | account_recovery_tokens | (recovery flow via verification pattern) | POST /verification/confirm | throttled | tests/Feature/IAM/ContactVerificationTest | Implemented |
+| FR-IAM-008 | IAM | user_sessions | RevokeSessionAction + ListActiveSessionsQuery | GET/DELETE /account/sessions | owner (SessionPolicy) | tests/Feature/IAM/SessionManagementTest | Tested |
+| FR-IAM-009 | IAM | login_attempts | AuthenticateUserAction + throttle middleware | POST /login | throttle:6,1 | tests/Feature/IAM/AuthenticationTest | Tested |
+| FR-IAM-010 | IAM | users, user_roles | ChangeUserStatusAction + AssignRoleAction | PUT /admin/users/{u}/status, POST .../roles | users.manage/roles.assign (UserPolicy/RolePolicy) | tests/Feature/IAM/AdminUserManagementTest | Tested |
+| FR-IAM-011 | IAM | role_permissions, permissions | EnsurePermission middleware + Policies | admin routes | permission:* | tests/Feature/IAM/AdminUserManagementTest (403 negatives) | Tested |
+| FR-IAM-012 | IAM | user_roles | AuthorizationScopeResolver + SessionPolicy (IDOR) | /account/sessions | owner scope | tests/Feature/IAM/SessionManagementTest (cross-user 403) | Tested |
 | FR-CUS-001 | CUS | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CUS-002 | CUS | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |
 | FR-CUS-003 | CUS | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | Not started |

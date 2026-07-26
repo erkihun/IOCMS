@@ -93,13 +93,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 ? (string) trans($e->translationKey())
                 : $e->getMessage();
 
+            // API/webhook clients always get the structured JSON error contract.
             if ($request->expectsJson() || $request->is('api/*', 'webhooks/*')) {
                 return response()->json($e->toErrorArray($localized), $e->status);
             }
 
-            return back()->withErrors(
-                $e->fields ?: ['error' => $localized]
-            )->with('error', $localized);
+            // For web requests: validation and recognized business-rule failures
+            // (422) redirect back with field/flash errors so the form can recover.
+            // Authorization/not-found/conflict/throttle return the real HTTP
+            // status so the outcome is unambiguous (NFR-SE-014, LLD §3.7).
+            if ($e->status === 422) {
+                return back()->withErrors($e->fields ?: ['error' => $localized])->with('error', $localized);
+            }
+
+            return response($localized, $e->status);
         });
 
         // Never leak internals; ensure correlation ID accompanies unexpected errors.

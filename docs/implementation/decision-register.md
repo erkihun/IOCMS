@@ -50,6 +50,11 @@ Status legend: **Applied** (decided and implemented) / **Assumption** (safe defa
 ## D-010 — UUIDv7 + human-readable references (Applied)
 **Context:** LLD §3.5, SDD ADR-009. Public IDs are UUIDv7 `CHAR(36)`; display references (order/shipment/return/case/payout/batch numbers) are governed separately and are never an authorization boundary. Route-model binding resolves on `public_id`, never internal `id`.
 
+## D-015 — Web error handler returns real HTTP status for non-422 domain errors (Applied)
+**Context:** The initial exception handler redirected ALL web-request `DomainException`s back with a flash error. That is correct for validation/business-rule failures (422) but wrong for authorization (403), not-found (404), conflict (409) and throttle (429), which the error contract (§23, LLD §3.7) says must carry the real status. It also made authorization-negative tests unable to distinguish a 403 from a redirect.
+**Decision:** The web renderer now redirects-back only for 422; for 401/403/404/409/429 it returns a response with the correct HTTP status and the safe localized message. API/webhook clients continue to get the structured JSON error contract at the correct status. Two `RegisterCustomerTest` assertions that relied on the old redirect behavior for a duplicate (409) were updated to assert `status 409` (the correct contract) — the implementation was made more correct, not the test weakened.
+**Consequence:** Authorization/scope/conflict outcomes are unambiguous to clients and tests; Inertia still surfaces validation errors via redirect-back.
+
 ## D-014 — Portable SQL for cross-driver tests (Applied)
 **Context:** MySQL-only functions (`GREATEST`) and DECIMAL string formatting differ on the SQLite test connection (D-002). SQLite returns a DECIMAL column as a numeric `40`, MySQL returns the string `'40.0000'`.
 **Decision:** Use portable SQL expressions in atomic updates (`CASE WHEN x>0 THEN x-1 ELSE 0 END` instead of `GREATEST`). In tests, compare money columns numerically (`(float) $x`) rather than by exact string, since the authoritative representation is the DECIMAL value, not its textual formatting. Production MySQL still stores/returns DECIMAL(20,4). The `Money` value object remains the in-app source of truth (no float arithmetic in logic — only in test comparison of already-computed persisted values).

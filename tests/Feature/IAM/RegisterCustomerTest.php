@@ -46,9 +46,10 @@ it('rejects a duplicate normalized identifier with identifier_taken (concurrency
 
     $this->post('/register', $payload)->assertRedirect();
 
-    // Second registration for the same normalized identifier must fail.
+    // Second registration for the same normalized identifier must fail with a
+    // 409 conflict (error contract §23 — state/concurrency conflict).
     $response = $this->from('/register')->post('/register', $payload);
-    $response->assertSessionHas('error');
+    $response->assertStatus(409);
 
     expect(User::query()->count())->toBe(1);
 });
@@ -69,7 +70,7 @@ it('does not reveal existing accounts on duplicate (no enumeration leak)', funct
     $this->post('/register', $payload)->assertRedirect();
 
     $response = $this->from('/register')->post('/register', $payload);
-    // Generic safe message, not "account exists".
-    $error = session('error');
-    expect($error)->not->toContain('exists');
+    // Generic safe message in the 409 body, never "account exists".
+    $response->assertStatus(409);
+    expect(strtolower($response->getContent()))->not->toContain('exists');
 });
